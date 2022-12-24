@@ -21,21 +21,20 @@
 #              -e NUM_CORES=8
 #
 
-FROM debian
-MAINTAINER Tobias Blomberg <sm0svx@ssa.se>
+FROM debian:latest
 
 # Install required packages and set up the svxlink user
 RUN apt-get update && \
     apt-get -y install git cmake g++ make libsigc++-2.0-dev libgsm1-dev \
-                       libpopt-dev tcl8.6-dev libgcrypt20-dev libspeex-dev \
-                       libasound2-dev alsa-utils vorbis-tools libqt4-dev \
-                       libopus-dev librtlsdr-dev libcurl4-openssl-dev curl sudo
+    libpopt-dev tcl8.6-dev libgcrypt20-dev libspeex-dev libasound2-dev \
+    alsa-utils vorbis-tools libopus-dev librtlsdr-dev libcurl4-openssl-dev \
+    libjsoncpp-dev curl sudo
 #RUN apt-get -y install groff doxygen
 
 # Install svxlink audio files
 RUN mkdir -p /usr/share/svxlink/sounds && \
     cd /usr/share/svxlink/sounds && \
-    curl -LO https://github.com/sm0svx/svxlink-sounds-en_US-heather/releases/download/14.08/svxlink-sounds-en_US-heather-16k-13.12.tar.bz2 && \
+    curl -LO https://github.com/sm0svx/svxlink-sounds-en_US-heather/releases/download/19.09/svxlink-sounds-en_US-heather-16k-19.09.tar.bz2 && \
     tar xvaf svxlink-sounds-* && \
     ln -s en_US-heather-16k en_US && \
     rm svxlink-sounds-*
@@ -45,7 +44,7 @@ ADD sudoers-svxlink /etc/sudoers.d/svxlink
 RUN chmod 0440 /etc/sudoers.d/svxlink
 
 ENV GIT_URL=https://github.com/sm0svx/svxlink.git \
-    GIT_BRANCH=master \
+    GIT_BRANCH=dbehnke/svxlink-usrp-docker \
     NUM_CORES=1
 
 RUN useradd -s /bin/bash svxlink
